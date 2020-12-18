@@ -90,7 +90,9 @@
                     type: 'POST',
                     url: '/question/2/',
                     data: { my_scores: scores,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
-                   
+                    success: function() {
+                        alert('Success')
+                    }
                 });
             });
         });
