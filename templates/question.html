@@ -15,8 +15,9 @@
 </head>
 <body>
     {% block body_block %}
-        {% for question in question_list %}
-        {% if question %}
+        {% if question_list %}
+            {% for question in question_list %}
+        
         <form method="POST"> {% csrf_token %}
         <!--Here begins the question and answers card-->
         <div class="mx-auto p-6 lg:p-10 bg-gray-100 rounded-xl my-16 w-11/12 lg:w-10/12 mb-auto h-max shadow-inner">
@@ -43,16 +44,17 @@
 
                 <label id="answer" style=" display: none; color: green;">{{question.correct_answer}}</label></td>    
             </div>
-
-
-            
         </div>
-        {% else %}
-        <h1>No Questions, Check back later</h1>
-        {% endif %}
     {% endfor %}
+        {% else %}
+            Quiz Not Started, Check Back Later
+        {% endif %}
     <div class="w-full justify-center">
-        <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
+        {% if question_list %}
+            <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
+        {% else %}
+            
+        {% endif %}
     </div>
     </form>
     <script src="{% static 'js/alpine.min.js' %}"></script>
@@ -80,7 +82,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '/question/2/',
-                    data: { my_scores: ans,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                    data: { my_scores: scores,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
                    
                 });
             });

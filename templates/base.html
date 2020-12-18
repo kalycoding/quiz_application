@@ -14,7 +14,7 @@
             }
         </style>
     </head>
-    <body>
+    <body class="flex flex-col min-h-screen">
         <nav class="bg-gray-800" x-data="{ open: false }">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex items-center justify-between h-16">
@@ -96,4 +96,11 @@
           <h1 class="text-center text-white">&copy;Copyright-Title 2020</h1>
         </footer>
     </body>
+    <style>
+      body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+    </style>
 </html>

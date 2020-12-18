@@ -46,6 +46,7 @@ def question(request, id):
         scores = request.POST.get('my_scores')
         print(scores)
         return HttpResponse('Quiz Submitted Successfully')
+    
     context = {'quiz':quiz,'question_list': question}
 
     return render(request, 'question.html', context)
