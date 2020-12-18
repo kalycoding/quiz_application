@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App | Quiz ongoing!</title>
+    <link rel="stylesheet" href="{% url 'css/tailwind.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+
+</head>
+<body>
+    {% block body_block %}
+        {% for question in question_list %}
+        {% if question %}
+        <form method="POST"> {% csrf_token %}
+        <!--Here begins the question and answers card-->
+        <div class="mx-auto p-6 lg:p-10 bg-gray-100 rounded-xl my-16 w-11/12 lg:w-10/12 mb-auto h-max shadow-inner">
+            <!-- <h1 class="text-center px-4 py-2 bg-gray-200 w-max mx-auto rounded-full shadow-inner">Question {{question.id}}</h1> -->
+            <h2 class="md:text-xl font-semibold text-center my-6">{{question.question}}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-5 text-sm md:text-lg mx-auto">
+           
+                <label class="labl">
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option1" value="{{question.option1}}" required>
+                    <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option1}}</h3></div>
+                </label>
+                <label class="labl">
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option2" value="{{question.option2}}" required>
+                    <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option2}}</h3></div>
+                </label>
+                <label class="labl">
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option3" value="{{question.option3}}" required>
+                    <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option3}}</h3></div>
+                </label>
+                <label class="labl">
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option4" value="{{question.option4}}" required>
+                    <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option4}}</h3></div>
+                </label>
+
+                <label id="answer" style=" display: none; color: green;">{{question.correct_answer}}</label></td>    
+            </div>
+
+
+            
+        </div>
+        {% else %}
+        <h1>No Questions, Check back later</h1>
+        {% endif %}
+    {% endfor %}
+    <div class="w-full justify-center">
+        <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
+    </div>
+    </form>
+    <script src="{% static 'js/alpine.min.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#but1').on('click', function(){
+                let e = document.getElementsByTagName('input');
+                let answer = document.querySelectorAll('#answer');
+                let scores = 0;
+                let user_answer = [];
+
+                for (let i = 0; i < e.length; i++) {
+                    if (e[i].type=='radio' && e[i].checked) {   
+                        user_answer.push(e[i].value)     
+                    }
+                }
+
+                user_answer.forEach((el) => answer.forEach((e2) => {
+                    if(String(el) === String(e2.innerHTML)) {
+                        scores+=10
+                    }
+                }));
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/question/2/',
+                    data: { my_scores: scores,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                   
+                });
+            });
+        });
+    </script>
+    <style>
+        body{
+            font-family: 'Quicksand', sans-serif;
+        }
+        .labl > div{
+            border: 1px solid transparent;
+        }
+        .labl > input:checked + div{ /* (RADIO CHECKED) DIV STYLES */
+            background-color: #ffe8d9;
+            border: 1px solid #ff6600;
+        }
+        </style>
+    {% endblock body_block %}
+</body>
+</html>
+
+
+
+
+
+function getAnswer() {
+            let e = document.getElementsByTagName('input');
+            let answer = document.querySelectorAll('#answer');
+            let scores = 0;
+            let user_answer = [];
+
+            for (let i = 0; i < e.length; i++) {
+                if (e[i].type=='radio' && e[i].checked) {   
+                    user_answer.push(e[i].value)     
+                }
+            }
+
+            user_answer.forEach((el) => answer.forEach((e2) => {
+                if(String(el) === String(e2.innerHTML)) {
+                    scores+=10
+                }
+            }));
+
+            alert(`your score is ${scores}`);
+        }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <script src="{% static 'js/auto-interval.js' %}"></script>
+    </head>
+    <body>
+        
+        {% block body_block %}
+            <header class="w-full h-90 block">
+              <div class="w-full h-full py-20 bg-green-400" x-show="activeSlide == 1">
+                <h1 class="text-2xl text-white font-bold text-center py-32">Adverts Goes Here</h1>
+              </div>
+          </header>
+            <div class="grid md:grid-cols-2 gap-4 lg:grid-cols-3 grid-cols-1 p-10 text-center font-sans">
+            {% if quiz %}
+                {% for q in quiz %}
+                    <div class="rounded-xl uppercase bg-white text-gray-900 overflow-hidden w-full lg:h-max lg:w-56 bg-gray-50 shadow-lg mx-auto">
+                        <div class="h-48 pic"></div>
+                        <clipPath id="clipping classbg-white">
+                            <circle cx="150" cy="150" r="50" />
+                            <rect x="150" y="150" width="100" height="100" />
+                        </clipPath>
+                        <h1 class="font-semibold mt-4 text-sm name">{{q.quiz_name}}</h1>
+                        <h1 class="font-thin text-xs text-gray-500">Closes: {{q.quiz_dead_line}}</h1>
+                        <div class="flex justify-center items-center">
+                        <h3 class="text-xs text-gray-500 font-normal mr-4">Entry Fee: </h3>
+                        <h1 class="font-semibold text-black  objects-center text-xl">${{q.quiz_price}}</h1>
+                    </div>
+                        
+                        <a href="{% url 'question' q.id %}"><button class="px-4 py-4 w-full mt-2 focus:outline-none hover:bg-blue-600 text-white bg-blue-500">Play Now!</button></a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                    <h1 class="c">No Quiz To Show, Check back Later</h1>
+            {% endif %}
+        </div>
+        
+        <style>
+        .c{
+            margin: auto;
+            color: red;
+        }
+        .name{
+            color: red;
+        }
+        .pic{
+            background-image: url('{% static 'images/card.jpeg' %}');
+            
+            background-position: center;
+            background-size: cover;
+        }
+        </style>
+        {% endblock body_block %}
+
+    </body>
+        
+</html>
