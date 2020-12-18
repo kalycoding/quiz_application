@@ -64,7 +64,7 @@
                 let answer = document.querySelectorAll('#answer');
                 let scores = 0;
                 let user_answer = [];
-
+                let ans = 30;
                 for (let i = 0; i < e.length; i++) {
                     if (e[i].type=='radio' && e[i].checked) {   
                         user_answer.push(e[i].value)     
@@ -80,7 +80,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '/question/2/',
-                    data: { my_scores: scores,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                    data: { my_scores: ans,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
                    
                 });
             });
@@ -106,23 +106,3 @@
 
 
 
-function getAnswer() {
-            let e = document.getElementsByTagName('input');
-            let answer = document.querySelectorAll('#answer');
-            let scores = 0;
-            let user_answer = [];
-
-            for (let i = 0; i < e.length; i++) {
-                if (e[i].type=='radio' && e[i].checked) {   
-                    user_answer.push(e[i].value)     
-                }
-            }
-
-            user_answer.forEach((el) => answer.forEach((e2) => {
-                if(String(el) === String(e2.innerHTML)) {
-                    scores+=10
-                }
-            }));
-
-            alert(`your score is ${scores}`);
-        }
