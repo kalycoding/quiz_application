@@ -49,12 +49,19 @@
         {% else %}
             Quiz Not Started, Check Back Later
         {% endif %}
-    <div class="w-full justify-center">
-        {% if question_list %}
-            <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
-        {% else %}
+        <div class="mx-auto px-8 mt-8 mx-auto w-max">
+        <div class="pagination">
+            {% if question_list.has_next %}
+                
+                <a href="?page={{ question_list.next_page_number }}">
+                    <strong>Next</strong>
+                </a>  
+            {% else %}
+               <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
+            {% endif %}
+        
+        </div>
             
-        {% endif %}
     </div>
     </form>
     <script src="{% static 'js/alpine.min.js' %}"></script>
@@ -108,3 +115,10 @@
 
 
 
+{% comment %} <div class="w-full justify-center">
+        {% if question_list %}
+            <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
+        {% else %}
+            
+        {% endif %}
+</div> {% endcomment %}

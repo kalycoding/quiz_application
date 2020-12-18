@@ -47,7 +47,7 @@ def question(request, id):
         print(scores)
         return HttpResponse('Quiz Submitted Successfully')
     
-    context = {'quiz':quiz,'question_list': question}
+    context = {'quiz':quiz,'question_list': page_obj}
 
     return render(request, 'question.html', context)
 
