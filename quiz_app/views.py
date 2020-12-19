@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Quiz, Question, Response
 from .forms import UserForm
 from django.contrib.auth import login, logout, authenticate
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.core.paginator import Paginator
 import json
+import operator
 # Create your views here.
 
 def index(request):
@@ -26,25 +27,30 @@ class QuizList(generic.ListView):
 @login_required(login_url='/login/')
 def question(request, id):
     quiz = Quiz.objects.get(pk=id)
-    if request.method == 'POST':
-        #print('post ne initiated')
-        scores = request.POST.get('my_scores')
-        response = Response(user=request.user, quiz=quiz, scores=100, isTaken=True)
-        response.save()
-        return HttpResponseRedirect('/leaderboard/')
+    question = quiz.question_set.all()
+    paginator_list = question
+    paginator = Paginator(paginator_list, 1)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    response = Response.objects.filter(quiz=quiz)
+    leaderboard = Response.objects.filter(quiz=quiz)
+    leader_dict = {}
+    for users in leaderboard:
+        print(users,users.scores)
+        leader_dict[str(users)] = str(users.scores)
+    print(leader_dict)
+    sorted_dict = dict( sorted(leader_dict.items(),
+                           key=lambda item: item[1],
+                           reverse=True))
+    users_taken = []
+    for username in response:
+        users_taken.append(str(username))
+
+    if str(request.user) in users_taken:
+        print('yallabai kayi quiz dinna fa')
+        return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
+    return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj})
     
-    else:
-        question = quiz.question_set.all()
-        paginator_list = question
-        paginator = Paginator(paginator_list, 1)
-        # user_response = Response.objects.filter(user=request.user)
-        # user_isTaken = user_response.first()
-        # print(user_isTaken.isTaken)
-        # print(user_response)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context = {'quiz':quiz,'question_list': page_obj}
-        return render(request, 'question.html', context)
 
 @login_required
 def user_logout(request):
@@ -113,3 +119,15 @@ def google_login(request):
 
 def leaderBoard(request):
     return render(request, 'leaderboard.html', context={})
+
+
+def answer(request,id):
+    quiz = Quiz.objects.get(pk=id)
+    print(quiz)
+    if request.method == 'POST':
+        print('post sdsdsd initiated')
+        scores = request.POST.get('my_scores')
+        print(scores)
+        response = Response(user=request.user, quiz=quiz, scores=scores, isTaken=True)
+        response.save()
+        #return HttpResponse('Kayi Test dinnan')
