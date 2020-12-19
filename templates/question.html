@@ -15,6 +15,10 @@
 </head>
 <body>
     {% block body_block %}
+        
+        {% if isTaken %}
+            Quiz has bee taken by {{request.user}}
+        {% else %}
         {% if question_list %}
             {% for question in question_list %}
         
@@ -61,13 +65,13 @@
             {% endif %}
         
         </div>
-            
+        {% endif %}         
     </div>
     </form>
     <script src="{% static 'js/alpine.min.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('#but1').on('click', function(){
                 let e = document.getElementsByTagName('input');
                 let answer = document.querySelectorAll('#answer');
@@ -79,21 +83,22 @@
                         user_answer.push(e[i].value)     
                     }
                 }
-
                 user_answer.forEach((el) => answer.forEach((e2) => {
-                    if(String(el) === String(e2.innerHTML)) {
-                        scores+=10
+                if(String(el) === String(e2.innerHTML)) {
+                    scores+=10
                     }
                 }));
-                
                 $.ajax({
                     type: 'POST',
                     url: '/question/2/',
-                    data: { my_scores: scores,  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
-                    success: function() {
-                        alert('Success')
+                    data: {
+                        my_scores: scores,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function(){
+                        alert(scores);
                     }
-                });
+                })
             });
         });
     </script>
@@ -113,14 +118,3 @@
 </body>
 </html>
 
-
-
-
-
-{% comment %} <div class="w-full justify-center">
-        {% if question_list %}
-            <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
-        {% else %}
-            
-        {% endif %}
-</div> {% endcomment %}

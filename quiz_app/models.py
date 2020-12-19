@@ -10,6 +10,7 @@ class Quiz(models.Model):
     quiz_price = models.FloatField(default=0)
     quiz_dead_line = models.DateTimeField()
     quiz_image = models.ImageField(upload_to='quiz_photo/',blank=True)
+    quiz_slug = models.SlugField(blank=True)
 
     def __str__(self):
         return self.quiz_name
@@ -46,8 +47,8 @@ class Response(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     scores = models.IntegerField(default=0)
-    isTaken = models.BooleanField(blank=True)
-    time_taken = models.TimeField()
+    isTaken = models.BooleanField(default=False)
+    
 
     def __str__(self):
-        return self.user
+        return str(self.user)

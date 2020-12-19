@@ -26,30 +26,25 @@ class QuizList(generic.ListView):
 @login_required(login_url='/login/')
 def question(request, id):
     quiz = Quiz.objects.get(pk=id)
-    question = quiz.question_set.all()
-    paginator_list = question
-    paginator = Paginator(paginator_list, 1)
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    
-            # choice.votes+=1
-            # choice.save()
-            # print(choice.votes)
-            # score = Scores(question=a, scores=100)
-            # score.save()
-            #print(page.question_text) 
-
     if request.method == 'POST':
-        print('post ne initiated')
+        #print('post ne initiated')
         scores = request.POST.get('my_scores')
-        print(scores)
-        return HttpResponse('Quiz Submitted Successfully')
+        response = Response(user=request.user, quiz=quiz, scores=100, isTaken=True)
+        response.save()
+        return HttpResponseRedirect('/leaderboard/')
     
-    context = {'quiz':quiz,'question_list': page_obj}
-
-    return render(request, 'question.html', context)
+    else:
+        question = quiz.question_set.all()
+        paginator_list = question
+        paginator = Paginator(paginator_list, 1)
+        # user_response = Response.objects.filter(user=request.user)
+        # user_isTaken = user_response.first()
+        # print(user_isTaken.isTaken)
+        # print(user_response)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {'quiz':quiz,'question_list': page_obj}
+        return render(request, 'question.html', context)
 
 @login_required
 def user_logout(request):
@@ -116,3 +111,5 @@ def register(request):
 def google_login(request):
     return render(request, 'google.html')
 
+def leaderBoard(request):
+    return render(request, 'leaderboard.html', context={})
