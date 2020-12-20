@@ -52,7 +52,7 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 <tr>
                                 <td class="px-2 py-4 whitespace-nowrap text-center">
-                                    1
+
                                 </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -147,7 +147,7 @@
         <div class="pagination">
             {% if question_list.has_next %}
                 
-                <a href="?page={{ question_list.next_page_number }}">
+                <a href="?page={{ question_list.next_page_number }}" id="next">
                     <strong>Next</strong>
                 </a>  
             {% else %}
@@ -162,14 +162,27 @@
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            let e = document.getElementsByTagName('input');
+            let answer = document.querySelectorAll('#answer');
+            let scores = 0;
+            let user_answer = [];
+            let ans = 30;
+            let question_list = document.querySelector('#question_list');
+            let number = question_list.innerHTML;
+            $('#next').on('click', function(){
+                for (let i = 0; i < e.length; i++) {
+                    if (e[i].type=='radio' && e[i].checked) {   
+                        user_answer.push(e[i].value)     
+                    }
+                }
+                user_answer.forEach((el) => answer.forEach((e2) => {
+                if(String(el) === String(e2.innerHTML)) {
+                    scores+=10
+                    }
+                }));
+                alert(scores);
+            });
             $('#but1').on('click', function(){
-                let e = document.getElementsByTagName('input');
-                let answer = document.querySelectorAll('#answer');
-                let scores = 0;
-                let user_answer = [];
-                let ans = 30;
-                let question_list = document.querySelector('#question_list');
-                let number = question_list.innerHTML;
                 for (let i = 0; i < e.length; i++) {
                     if (e[i].type=='radio' && e[i].checked) {   
                         user_answer.push(e[i].value)     

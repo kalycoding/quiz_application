@@ -49,7 +49,7 @@ def question(request, id):
     if str(request.user) in users_taken:
         print('yallabai kayi quiz dinna fa')
         return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
-    return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj})
+    return render(request, 'question.html', {'quiz':quiz,'question_list': question})
     
 
 @login_required
