@@ -24,7 +24,7 @@ class Question(models.Model):
     option4 = models.CharField(max_length=100)
     correct_answer = models.CharField(max_length=100)
     isTaken = models.BooleanField(default=False)
-
+    points = models.IntegerField(default=30)
     def __str__(self):
         return self.question
         

@@ -20,8 +20,9 @@
             
             <div class="mx-auto p-5 text-xl">
                 You've taken this quiz already, below is the Leaderboard
+               
             </div>
-            <div class="h-screen mx-auto bg-gray-100 w-10/12 p-24 pt-24">
+            <div class="">
                 <h1 class="font-semibold text-2xl text-center my-6">Leaderboard</h1>
             <!-- This example requires Tailwind CSS v2.0+ -->
                 <div class="flex flex-col w-max mx-auto">
@@ -58,7 +59,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded-full" src="{% static 'images/card.jpeg' %}" alt="">
+                                    <img class="h-10 w-10 rounded-full" src="{% static 'images/avatar.png' %}" alt="">
                                     </div>
                                     <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">
@@ -135,7 +136,8 @@
                     <input type="radio" name="{{question.id}}" class="appearance-none" id="option4" value="{{question.option4}}" required>
                     <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option4}}</h3></div>
                 </label>
-                <label id="question_list" style=" display: none; color: green;">{{quiz.id}}</label></td>    
+                <label id="question_list" style=" display: none; color: green;">{{quiz.id}}</label></td>
+                <label id="score_point" style=" display: none; color: green;">{{quiz.points}}</label></td>    
                 <label id="answer" style=" display: none; color: green;">{{question.correct_answer}}</label></td>    
             </div>
         </div>
@@ -169,30 +171,25 @@
             let ans = 30;
             let question_list = document.querySelector('#question_list');
             let number = question_list.innerHTML;
-            $('#next').on('click', function(){
-                for (let i = 0; i < e.length; i++) {
-                    if (e[i].type=='radio' && e[i].checked) {   
-                        user_answer.push(e[i].value)     
-                    }
-                }
-                user_answer.forEach((el) => answer.forEach((e2) => {
-                if(String(el) === String(e2.innerHTML)) {
-                    scores+=10
-                    }
-                }));
-                alert(scores);
-            });
+            
             $('#but1').on('click', function(){
+                let j = 0;
                 for (let i = 0; i < e.length; i++) {
                     if (e[i].type=='radio' && e[i].checked) {   
                         user_answer.push(e[i].value)     
                     }
                 }
-                user_answer.forEach((el) => answer.forEach((e2) => {
-                if(String(el) === String(e2.innerHTML)) {
-                    scores+=10
+                // user_answer.forEach((el) => answer.forEach((e2) => {
+                // if(String(el) === String(e2.innerHTML)) {
+                //     scores+=10
+                //     }
+                // }));
+                for (let i = 0; i < answer.length; i++) {
+                    compare_element = user_answer.shift();
+                    if (String(answer[i].innerHTML) == String(compare_element)) {
+                        scores+=50;
                     }
-                }));
+                }
                 $.ajax({
                     type: 'POST',
                     url: `/answer/${number}/`,
