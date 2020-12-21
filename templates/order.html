@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
     <script src="https://kit.fontawesome.com/47101d2035.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -13,14 +14,46 @@
   <body>
     <div class="center">
       <form action="" method="POST"> {% csrf_token %}
-          <p class="h3 mb-3">
-              <i class="fas fa-coffee"></i> BUY ME A COFFEE!!
-          </p>
+          <div class="">
+    <h1 class="font-semibold text-2xl text-center my-6">Checkout Payment</h1>
+<!-- This example requires Tailwind CSS v2.0+ -->
+    <div class="flex flex-col w-max mx-auto">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    
+                </tr>
+                <tr>
+                    {{ quiz }}
+                </tr>
+                </thead>
+                                                                          
+            </table>
+            </div>
+        </div>
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
 
-          <p class="mb-3">
-              Help Us Create more videos by donating
-          </p>
-          <input type="name" name="name" id="name" required class="form-control mb-4" placeholder="Name">
+                </tr>
+                <tr>
+                    <label id="price">Price {{ quiz.quiz_price }}</label>
+                   <label id="price" style="display: none;">{{ quiz.quiz_price }}</label>
+                </tr>
+                </thead>
+                                                                          
+            </table>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+         
 
           <!---RAZORPAY INTEGRATION HERE-->
 
@@ -30,14 +63,16 @@
               data-currency="INR"
               data-order_id="{{payment.id}}"
               data-buttontext="Pay with Razorpay"
-              data-name="Professional Cipher"
-              data-description="Django and Data Science"
+              data-name="Quiz"
+              data-description="{{ quiz}} Quiz"
               data-image="https://example.com/your_logo.jpg"
               data-prefill.name="PC"
               data-prefill.email="pc@studygyaan.com"
-              data-theme.color="#F37254">
+              data-theme.color="#G37224">
+              data-button_theme="rzp-dark-standard"
           </script>
       </form>
   </div>
+  
   </body>
 </html>

@@ -71,7 +71,7 @@ def question(request, id):
     else:
         if request.method == 'POST':
             name = request.POST.get('name')
-            amount = 5000
+            amount = quiz.quiz_price
 
             client = razorpay.Client(
                 auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
@@ -183,3 +183,10 @@ def create_order(request):
         
 def success(request):
     return render(request, 'success.html')
+
+
+def about(request):
+    return render(request, 'about.html')
+
+def faqs(request):
+    return render(request, 'faqs.html')
