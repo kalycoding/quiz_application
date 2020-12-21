@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Quiz, Question, Response
+from .models import Quiz, Question, Response, Payment
 from .forms import UserForm
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect, HttpResponse
@@ -9,7 +9,11 @@ from django.views import generic
 from django.core.paginator import Paginator
 import json
 import operator
+import razorpay
 # Create your views here.
+
+client = razorpay.Client(auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"))
+
 
 def index(request):
     quiz = Quiz.objects.all()[::-1]
@@ -34,22 +38,60 @@ def question(request, id):
     page_obj = paginator.get_page(page_number)
     response = Response.objects.filter(quiz=quiz)
     leaderboard = Response.objects.filter(quiz=quiz)
+    payment = Payment.objects.filter(quiz=quiz)
     leader_dict = {}
     for users in leaderboard:
-        print(users,users.scores)
+        #print(users,users.scores)
+        
         leader_dict[str(users)] = str(users.scores)
-    print(leader_dict)
+
     sorted_dict = dict( sorted(leader_dict.items(),
                            key=lambda item: item[1],
                            reverse=True))
+
+    # for key, value in isPaid.items():
+    #     print(key,value)
+
     users_taken = []
+    #print(payment)
     for username in response:
         users_taken.append(str(username))
 
-    if str(request.user) in users_taken:
-        print('yallabai kayi quiz dinna fa')
-        return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
-    return render(request, 'question.html', {'quiz':quiz,'question_list': question})
+    user_paid = []
+
+    for userpaid in payment:
+        user_paid.append(str(userpaid.user))
+    print(user_paid)
+
+    if str(request.user) in user_paid:
+        if str(request.user) in users_taken:
+            return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
+        else:
+            return render(request, 'question.html', {'quiz':quiz,'question_list': question})
+    else:
+        if request.method == 'POST':
+            name = request.POST.get('name')
+            amount = 5000
+
+            client = razorpay.Client(
+                auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
+            ))
+
+            payment = client.order.create({
+                'amount': amount, 'currency': 'INR',
+                'payment_capture': '1'
+            })
+            print('post request initiated for payment')
+            if payment:
+                new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
+                new_payment.save()
+                return render(request, 'question.html', {'quiz':quiz,'question_list': question})
+        return render(request, 'order.html', {'quiz':quiz,'question_list': question})
+    # if str(request.user) in users_taken:
+    #     return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
+
+    
+    return render(request, 'order.html', {'quiz':quiz,'question_list': question})
     
 
 @login_required
@@ -74,6 +116,7 @@ def user_login(request):
         else:
             return render(request, 'login.html', context={'error':'Invalid Login Details, Try Again'})
     else:
+
         return render(request, 'login.html', context={})
 
 def register(request):
@@ -130,4 +173,13 @@ def answer(request,id):
         print(scores)
         response = Response(user=request.user, quiz=quiz, scores=scores, isTaken=True)
         response.save()
-        #return HttpResponse('Kayi Test dinnan')
+        
+
+def create_order(request):
+    if request.method == 'POST':
+        print('post request initiated')
+
+    return render(request, 'order.html', {})
+        
+def success(request):
+    return render(request, 'success.html')

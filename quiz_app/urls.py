@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index,register, user_login, user_logout, QuizList, question, google_login, leaderBoard, answer
+from .views import index,register, user_login, user_logout, QuizList, question, google_login, leaderBoard, answer, create_order, success
 urlpatterns = [
     path('',index, name='landing_page'),
     path('login/', user_login, name='login'),
@@ -8,5 +8,7 @@ urlpatterns = [
     path('question/<int:id>/', question, name='question'),
     path('google/', google_login, name='google'),
     path('leaderboard/', leaderBoard, name='leaderboard'),
-    path('answer/<int:id>/', answer, name='answer')
+    path('answer/<int:id>/', answer, name='answer'),
+    path('create_order/', create_order, name='create_order'),
+    path('success/', success, name='success')
 ]

@@ -50,6 +50,12 @@ class Response(models.Model):
     scores = models.IntegerField(default=0)
     isTaken = models.BooleanField(default=False)
     #time_taken = models.TimeField(blank=True)
+    
 
     def __str__(self):
         return str(self.user)
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    isPaid = models.BooleanField(default=False)
