@@ -69,6 +69,7 @@ def question(request, id):
         else:
             return render(request, 'question.html', {'quiz':quiz,'question_list': question})
     else:
+        amount = quiz.quiz_price
         if request.method == 'POST':
             name = request.POST.get('name')
             amount = quiz.quiz_price
@@ -86,7 +87,7 @@ def question(request, id):
                 new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
                 new_payment.save()
                 return render(request, 'question.html', {'quiz':quiz,'question_list': question})
-        return render(request, 'order.html', {'quiz':quiz,'question_list': question})
+        return render(request, 'order.html', {'quiz':quiz,'question_list': question, 'amount':amount})
     # if str(request.user) in users_taken:
     #     return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
 

@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App | Quiz ongoing!</title>
     <link rel="stylesheet" href="{% url 'css/tailwind.css' %}">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">    
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -237,7 +239,15 @@
             <script src="../js/alpine.min.js"></script>
         {% else %}
         {% if question_list %}
-            {% for question in question_list %}
+        
+    
+            <div class="mx-auto p-6">
+                <h3 class="text-lg-center font-bold" style="font-size: large;">Quiz Timer</h3>
+                <span id="time" class="text-lg-center text-lg" style="color: red">60:00</span> Mins
+            </div>
+        
+        
+        {% for question in question_list %}
             
         <form method="POST"> {% csrf_token %}
         <!--Here begins the question and answers card-->
@@ -289,6 +299,30 @@
     <script src="{% static 'js/alpine.min.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script>
+        
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    timer = duration;
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var Minutes = 60 * 60,
+                display = document.querySelector('#time');
+            startTimer(Minutes, display);
+        };
+
         $(document).ready(function() {
             let e = document.getElementsByTagName('input');
             let answer = document.querySelectorAll('#answer');
