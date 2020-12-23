@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% comment %} {% extends 'base.html' %} {% endcomment %}
 {% load static %}
+
 <html>
   <head>
     <meta charset="UTF-8">
@@ -144,19 +146,20 @@
       </style>
   </head>
   <body>
-    <div class="center">
+      {% block body_block %}
+            <div class="center">
       <form action="" method="POST"> {% csrf_token %}
           <div class="">
     
 <!-- This example requires Tailwind CSS v2.0+ -->
-    <div class="flex flex-col w-max mx-auto">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="flex flex-col w-max mx-auto p-10 ">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <div class="jumbotron">
-                    <h1 class="font-semibold text-2xl text-center my-6">Checkout Payment</h1>
+                    <h1 class="font-semibold text-2xl text-center my-6 bg">Checkout Payment</h1>
                     <center><h1>{{quiz}}</h1></center>
-                    <h3>Price is {{quiz.quiz_price}}</h3>
+                    <center><h3 class="justify-center">Price is {{quiz.quiz_price}}</h3></center>
                 </div>
             </div>
         </div>
@@ -185,5 +188,7 @@
       </form>
   </div>
   
+      {% endblock body_block %}
+
   </body>
 </html>

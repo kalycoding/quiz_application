@@ -7,9 +7,11 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.core.paginator import Paginator
+from django.utils import timezone
 import json
 import operator
 import razorpay
+
 # Create your views here.
 
 client = razorpay.Client(auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"))
@@ -17,6 +19,10 @@ client = razorpay.Client(auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAG
 
 def index(request):
     quiz = Quiz.objects.all()[::-1]
+    paginator = Paginator(quiz, 3)
+    page_number = request.GET.get('page')
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {'quiz':quiz}
     return render(request, 'index.html', context=context)
 
@@ -43,7 +49,7 @@ def question(request, id):
     for users in leaderboard:
         #print(users,users.scores)
         
-        leader_dict[str(users)] = str(users.scores)
+        leader_dict[str(users)] = [str(users.scores), str(users.time_taken)]
 
     sorted_dict = dict( sorted(leader_dict.items(),
                            key=lambda item: item[1],
@@ -63,12 +69,14 @@ def question(request, id):
         user_paid.append(str(userpaid.user))
     print(user_paid)
 
-    if str(request.user) in user_paid:
-        if str(request.user) in users_taken:
-            return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
+    
+
+    if str(request.user) in user_paid:      ## Checks weda user pay for the quiz
+        if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
+            return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
         else:
-            return render(request, 'question.html', {'quiz':quiz,'question_list': question})
-    else:
+            return render(request, 'question.html', {'quiz':quiz,'question_list': question}) ## return question pages if not
+    else:                                   ##  User hasnt made the payment
         amount = quiz.quiz_price
         if request.method == 'POST':
             name = request.POST.get('name')
@@ -87,11 +95,7 @@ def question(request, id):
                 new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
                 new_payment.save()
                 return render(request, 'question.html', {'quiz':quiz,'question_list': question})
-        return render(request, 'order.html', {'quiz':quiz,'question_list': question, 'amount':amount})
-    # if str(request.user) in users_taken:
-    #     return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict})
-
-    
+        return render(request, 'order.html', {'quiz':quiz,'question_list': question, 'amount':amount})    
     return render(request, 'order.html', {'quiz':quiz,'question_list': question})
     
 
@@ -171,8 +175,10 @@ def answer(request,id):
     if request.method == 'POST':
         print('post sdsdsd initiated')
         scores = request.POST.get('my_scores')
+        time_taken = request.POST.get('time_taken')
+        print(time_taken)
         print(scores)
-        response = Response(user=request.user, quiz=quiz, scores=scores, isTaken=True)
+        response = Response(user=request.user, quiz=quiz, scores=scores, isTaken=True, time_taken=time_taken)
         response.save()
         
 

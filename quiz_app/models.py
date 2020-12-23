@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from autoslug import AutoSlugField
+from django.utils import timezone
 # Create your models here.
 
 
@@ -11,6 +13,7 @@ class Quiz(models.Model):
     quiz_dead_line = models.DateTimeField()
     quiz_image = models.ImageField(upload_to='quiz_photo/',blank=True)
     quiz_slug = models.SlugField(blank=True)
+    quiz_time = models.IntegerField(default=60)
 
     def __str__(self):
         return self.quiz_name
@@ -25,6 +28,7 @@ class Question(models.Model):
     correct_answer = models.CharField(max_length=100)
     isTaken = models.BooleanField(default=False)
     points = models.IntegerField(default=30)
+
     def __str__(self):
         return self.question
         
@@ -49,7 +53,7 @@ class Response(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     scores = models.IntegerField(default=0)
     isTaken = models.BooleanField(default=False)
-    #time_taken = models.TimeField(blank=True)
+    time_taken = models.CharField(max_length=50)
     
 
     def __str__(self):
