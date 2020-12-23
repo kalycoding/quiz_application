@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Quiz, Question, Response, Payment
+from .models import Quiz, Question, Response, Payment, ContactUsForm
 from .forms import UserForm
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect, HttpResponse
@@ -197,3 +197,16 @@ def about(request):
 
 def faqs(request):
     return render(request, 'faqs.html')
+
+def contact(request):
+    if request.method == 'POST':
+        print('post sdsdsd initiated')
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('secondname')
+        email = request.POST.get('email')
+        text = request.POST.get('text')
+        print(firstname, lastname, email, text)
+        contact_form = ContactUsForm(first_name=firstname, last_name=lastname, email=email, text= text)
+        contact_form.save()
+        return render(request, 'contact.html', context={'isSubmit':'True'})
+    return render(request, 'contact.html')

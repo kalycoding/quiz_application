@@ -14,6 +14,7 @@ class Quiz(models.Model):
     quiz_image = models.ImageField(upload_to='quiz_photo/',blank=True)
     quiz_slug = models.SlugField(blank=True)
     quiz_time = models.IntegerField(default=60)
+    free_quiz = models.BooleanField(default=False)
 
     def __str__(self):
         return self.quiz_name
@@ -63,3 +64,9 @@ class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     isPaid = models.BooleanField(default=False)
+
+class ContactUsForm(models.Model):
+    first_name = models.CharField(max_length=300)
+    last_name = models.CharField(max_length=300)
+    email = models.EmailField(max_length=300)
+    text = models.TextField(max_length=5000)
