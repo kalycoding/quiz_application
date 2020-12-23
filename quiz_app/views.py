@@ -57,7 +57,7 @@ def question(request, id):
 
     # for key, value in isPaid.items():
     #     print(key,value)
-
+    print(quiz.free_quiz)
     users_taken = []
     #print(payment)
     for username in response:
@@ -69,34 +69,39 @@ def question(request, id):
         user_paid.append(str(userpaid.user))
     print(user_paid)
 
-    
-
-    if str(request.user) in user_paid:      ## Checks weda user pay for the quiz
+    if quiz.free_quiz == True:
         if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
             return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
         else:
             return render(request, 'question.html', {'quiz':quiz,'question_list': question}) ## return question pages if not
-    else:                                   ##  User hasnt made the payment
-        amount = quiz.quiz_price
-        if request.method == 'POST':
-            name = request.POST.get('name')
+
+    else:
+        if str(request.user) in user_paid:      ## Checks weda user pay for the quiz
+            if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
+                return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
+            else:
+                return render(request, 'question.html', {'quiz':quiz,'question_list': question}) ## return question pages if not
+        else:                                   ##  User hasnt made the payment
             amount = quiz.quiz_price
+            if request.method == 'POST':
+                name = request.POST.get('name')
+                amount = quiz.quiz_price
 
-            client = razorpay.Client(
-                auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
-            ))
+                client = razorpay.Client(
+                    auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
+                ))
 
-            payment = client.order.create({
-                'amount': amount, 'currency': 'INR',
-                'payment_capture': '1'
-            })
-            print('post request initiated for payment')
-            if payment:
-                new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
-                new_payment.save()
-                return render(request, 'question.html', {'quiz':quiz,'question_list': question})
-        return render(request, 'order.html', {'quiz':quiz,'question_list': question, 'amount':amount})    
-    return render(request, 'order.html', {'quiz':quiz,'question_list': question})
+                payment = client.order.create({
+                    'amount': amount, 'currency': 'INR',
+                    'payment_capture': '1'
+                })
+                print('post request initiated for payment')
+                if payment:
+                    new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
+                    new_payment.save()
+                    return render(request, 'question.html', {'quiz':quiz,'question_list': question})
+                return render(request, 'order.html', {'quiz':quiz,'question_list': question, 'amount':amount})    
+            return render(request, 'order.html', {'quiz':quiz,'question_list': question})
     
 
 @login_required
