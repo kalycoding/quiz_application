@@ -272,7 +272,7 @@
 
         <form method="POST"> {% csrf_token %}
         <!--Here begins the question and answers card-->
-        <div class="mx-auto p-6 lg:p-10 bg-gray-100 rounded-xl my-16 w-11/12 lg:w-10/12 mb-auto h-max shadow-inner">
+        <div class="mx-auto p-6 lg:p-10 bg-gray-100 rounded-xl my-16 w-11/12 lg:w-10/12 mb-auto h-max shadow-inner" id="qdiv">
             <!-- <h1 class="text-center px-4 py-2 bg-gray-200 w-max mx-auto rounded-full shadow-inner">Question {{question.id}}</h1> -->
             <h2 class="md:text-xl font-semibold text-center my-6">{{question.question}}</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-5 text-sm md:text-lg mx-auto">
@@ -307,9 +307,11 @@
 
             {% if question_list.has_next %}
 
-                <a href="?page={{ question_list.next_page_number }}" id="next">
+                <a href="?page={{ question_list.next_page_number }}" id="next" class="p-4">
                     <strong>Next</strong>
                 </a>
+                
+                <!-- <button onclick=""></button> -->
             {% else %}
                <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
             {% endif %}
@@ -320,6 +322,7 @@
     </form>
     <script src="{% static 'js/alpine.min.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="{% static 'js/cookies.js' %}"></script>
     <script>
 
         function startTimer(duration, display) {
@@ -345,6 +348,7 @@
                 display = document.querySelector('#time');
             startTimer(Minutes, display);
         };
+        let final_ans = 0;
 
         $(document).ready(function() {
             let e = document.getElementsByTagName('input');
@@ -355,21 +359,25 @@
             let question_list = document.querySelector('#question_list');
             let number = question_list.innerHTML;
             let t = document.querySelector("#time");
-            // $("#next").on('click', function(){
+            
+            $("#next").on('click', function(){
+                for (let i = 0; i < e.length; i++) {
+                    if (e[i].type=='radio' && e[i].checked) {
+                        user_answer.push(e[i].value)
+                    }
+                }
 
-            //     for (let i = 0; i < e.length; i++) {
-            //         if (e[i].type=='radio' && e[i].checked) {
-            //             user_answer.push(e[i].value)
-            //         }
-            //     }
-
-            //     for (let i = 0; i < answer.length; i++) {
-            //         compare_element = user_answer.shift();
-            //         if (String(answer[i].innerHTML) == String(compare_element)) {
-            //             scores+=50;
-            //         }
-            //     }
-            // });
+                for (let i = 0; i < answer.length; i++) {
+                    compare_element = user_answer.shift();
+                    if (String(answer[i].innerHTML) == String(compare_element)) {
+                        scores+=50;
+                        $.cookie('total', Number($.cookie('total')) + 50);
+                        // alert($.cookie('total'));
+                    }
+                   
+                }
+            });
+            // alert(final_ans)
             $('#but1').on('click', function(){
                 // alert(t.innerHTML);
                 let j = 0;
@@ -378,29 +386,27 @@
                         user_answer.push(e[i].value)
                     }
                 }
-                // user_answer.forEach((el) => answer.forEach((e2) => {
-                // if(String(el) === String(e2.innerHTML)) {
-                //     scores+=10
-                //     }
-                // }));
+    
                 for (let i = 0; i < answer.length; i++) {
                     compare_element = user_answer.shift();
                     if (String(answer[i].innerHTML) == String(compare_element)) {
                         scores+=50;
+                        $.cookie('total', Number($.cookie('total')) + 50);
                     }
                 }
                 $.ajax({
                     type: 'POST',
                     url: `/answer/${number}/`,
                     data: {
-                        my_scores: scores,
+                        my_scores: $.cookie('total'),
                         time_taken: String(t.innerHTML),
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                     },
-                    success: function(){
-                        alert(scores);
+                    success: function(resp){
+                        $.cookie('total', 0);
                     },
                 })
+                $.cookie('total', 0);
             });
         });
     </script>

@@ -15,27 +15,32 @@
         
         {% block body_block %}
             <header class="w-full h-90 block">
-              <div class="w-full h-full py-20 bg-green-400" x-show="activeSlide == 1">
-                <h1 class="text-2xl text-white font-bold text-center py-32">Adverts Goes Here</h1>
-              </div>
+              <!-- <div class="w-full h-full py-20 bg-green-400">
+                <img src="https://image.shutterstock.com/image-photo/programmatic-advertising-concept-youtube-online-600w-1675180834.jpg" alt="" class="block h-full w-full mx-auto">
+              </div> -->
+              <div class="mt-4 px-10 h-96  bg-gray-100 shadow  w-full rounded-xl">
+                <!-- <h1 class="text-xl font-semibold py-2 p-1">News Flash</h1> -->
+                <img src="https://images-platform.99static.com/CFJNEiym-Cgo9psxSOIkLQanIZs=/0x0:2000x2000/500x500/top/smart/99designs-contests-attachments/87/87694/attachment_87694953" alt="images-platform" class="block h-full w-full mx-auto" style="width:100%;">
+            </div>
           </header>
             <div class="grid md:grid-cols-2 gap-4 lg:grid-cols-3 grid-cols-1 p-10 text-center font-sans">
             {% if quiz %}
             
                 {% for q in quiz %}
                 
-                    <div class="rounded-xl uppercase bg-white text-gray-900 overflow-hidden w-full lg:h-max lg:w-56 bg-gray-50 shadow-lg mx-auto">
+                    <div class="rounded-xl uppercase bg-white text-gray-900 overflow-hidden w-full lg:h-100 lg:w-56 bg-gray-50 shadow-lg mx-auto">
                         <div class="h-48 pic" style="background-image: url('{{ q.quiz_image.url }}'); background-position: center; background-size: cover;"></div>
                         <clipPath id="clipping classbg-white">
                             <circle cx="150" cy="150" r="50" />
                             <rect x="150" y="150" width="100" height="100" />
                         </clipPath>
-                        <h1 class="font-semibold mt-4 text-sm name">{{q.quiz_name}}</h1>
-                        <h1 class="font-thin text-xs text-gray-500">Closes: {{q.quiz_dead_line}}</h1>
+                        <h1 class="font-semibold mt-4 text-sm name text-lg">{{q.quiz_name}}</h1>
+                        <h1 class="font-thin text-xs text-gray-500 p-3" style="color: red;">Closes: {{q.quiz_dead_line}}</h1>
+                        <h3 class="text-xs text-gray-500 font-normal mr-4 text-2xl">Entry Fee: </h3> 
+                        <h1 class="font-semibold text-black  objects-center text-xl">${{q.quiz_price}}</h1>  
                         <div class="flex justify-center items-center">
-                        <h3 class="text-xs text-gray-500 font-normal mr-4">Entry Fee: </h3>
-                        <h1 class="font-semibold text-black  objects-center text-xl">${{q.quiz_price}}</h1>
-                        
+                            <h3 class="text-xs text-gray-500 font-normal mr-4 text-lg">Winning Fee: </h3> 
+                        <h1 class="font-semibold text-black  objects-center text-xl">${{q.winning_amoun}}</h1>
                     </div>
                         
                         <a href="{% url 'question' q.id %}"><button class="px-4 py-4 w-full mt-2 focus:outline-none hover:bg-blue-600 text-white bg-blue-500">Play Now!</button></a>

@@ -28,8 +28,8 @@
                       <a href="{% url 'landing_page' %}" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
         
                       <a href="{% url 'about' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-        
-                      <a href="{% url 'faqs' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">FAQs</a>
+                      <a href="{% url 'faqs' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Faqs</a>    
+                      <a href="{% url 'contact' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact US</a>
         
                     </div>
                   </div>
@@ -93,7 +93,7 @@
             {% endblock body_block %}
         <script src="{% static 'js/alpine.min.js' %}"></script>
         <footer class="bg-gray-700 p-10 mt-auto">
-          <a href="{% url 'contact' %}"><h1 class="text-center text-white p-3">Contact Us</h1></a>
+          {% comment %} <a href="{% url 'contact' %}"><h1 class="text-center text-white p-6">Contact Us</h1></a> {% endcomment %}
           <h1 class="text-center text-white">&copy;Copyright-Title 2020</h1>
         </footer>
     </body>

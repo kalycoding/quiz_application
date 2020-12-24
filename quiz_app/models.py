@@ -15,6 +15,7 @@ class Quiz(models.Model):
     quiz_slug = models.SlugField(blank=True)
     quiz_time = models.IntegerField(default=60)
     free_quiz = models.BooleanField(default=False)
+    winning_amoun = models.IntegerField(default=0)
 
     def __str__(self):
         return self.quiz_name

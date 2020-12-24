@@ -55,6 +55,8 @@ def question(request, id):
                            key=lambda item: item[1],
                            reverse=True))
 
+                           
+
     # for key, value in isPaid.items():
     #     print(key,value)
     print(quiz.free_quiz)
@@ -73,19 +75,18 @@ def question(request, id):
         if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
             return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
         else:
-            return render(request, 'question.html', {'quiz':quiz,'question_list': question}) ## return question pages if not
+            return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj}) ## return question pages if not
 
     else:
         if str(request.user) in user_paid:      ## Checks weda user pay for the quiz
             if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
                 return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
             else:
-                return render(request, 'question.html', {'quiz':quiz,'question_list': question}) ## return question pages if not
+                return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj}) ## return question pages if not
         else:                                   ##  User hasnt made the payment
-            amount = quiz.quiz_price
             if request.method == 'POST':
                 name = request.POST.get('name')
-                amount = quiz.quiz_price
+                amount = amount
 
                 client = razorpay.Client(
                     auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
@@ -99,9 +100,9 @@ def question(request, id):
                 if payment:
                     new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
                     new_payment.save()
-                    return render(request, 'question.html', {'quiz':quiz,'question_list': question})
-                return render(request, 'order.html', {'quiz':quiz,'question_list': question, 'amount':amount})    
-            return render(request, 'order.html', {'quiz':quiz,'question_list': question})
+                    return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj})
+                return render(request, 'order.html', {'quiz':quiz,'question_list': page_obj, 'amount':amount})    
+            return render(request, 'order.html', {'quiz':quiz,'question_list': page_obj})
     
 
 @login_required
@@ -180,6 +181,7 @@ def answer(request,id):
     if request.method == 'POST':
         print('post sdsdsd initiated')
         scores = request.POST.get('my_scores')
+        # indi_scores = request.POST.get('individual_scores')
         time_taken = request.POST.get('time_taken')
         print(time_taken)
         print(scores)
