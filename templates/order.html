@@ -159,7 +159,8 @@
                 <div class="jumbotron">
                     <h1 class="font-semibold text-2xl text-center my-6 bg">Checkout Payment</h1>
                     <center><h1>{{quiz}}</h1></center>
-                    <center><h3 class="justify-center">Price is {{quiz.quiz_price}}</h3></center> 
+                    <center><h3 class="justify-center">Price is {{quiz.quiz_price}}</h3></center>
+                </div>
             </div>
         </div>
         </div>
@@ -171,7 +172,7 @@
 
           <script src="https://checkout.razorpay.com/v1/checkout.js"
               data-key="rzp_test_uCzWnrEymDyUU5"
-              data-amount="{{ amount }}"
+              data-amount="5000"
               data-currency="INR"
               data-order_id="{{payment.id}}"
               data-buttontext="Pay with Razorpay"

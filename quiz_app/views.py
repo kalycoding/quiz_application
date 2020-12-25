@@ -55,8 +55,6 @@ def question(request, id):
                            key=lambda item: item[1],
                            reverse=True))
 
-                           
-
     # for key, value in isPaid.items():
     #     print(key,value)
     print(quiz.free_quiz)
@@ -84,9 +82,10 @@ def question(request, id):
             else:
                 return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj}) ## return question pages if not
         else:                                   ##  User hasnt made the payment
+            amount = quiz.quiz_price
             if request.method == 'POST':
                 name = request.POST.get('name')
-                amount = amount
+                amount = quiz.quiz_price
 
                 client = razorpay.Client(
                     auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
@@ -96,6 +95,7 @@ def question(request, id):
                     'amount': amount, 'currency': 'INR',
                     'payment_capture': '1'
                 })
+                print(payment)
                 print('post request initiated for payment')
                 if payment:
                     new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
@@ -181,10 +181,10 @@ def answer(request,id):
     if request.method == 'POST':
         print('post sdsdsd initiated')
         scores = request.POST.get('my_scores')
-        # indi_scores = request.POST.get('individual_scores')
+        # scores = request.POST.get('individual_scores')
         time_taken = request.POST.get('time_taken')
-        print(time_taken)
-        print(scores)
+        # print(time_taken)
+        # print(scores)
         response = Response(user=request.user, quiz=quiz, scores=scores, isTaken=True, time_taken=time_taken)
         response.save()
         

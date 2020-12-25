@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
 from django.utils import timezone
+
 # Create your models here.
 
 
