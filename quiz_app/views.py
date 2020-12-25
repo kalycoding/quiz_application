@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.core.paginator import Paginator
 from django.utils import timezone
+from collections import OrderedDict
 import json
 import operator
 import razorpay
@@ -50,14 +51,34 @@ def question(request, id):
         #print(users,users.scores)
         
         leader_dict[str(users)] = [str(users.scores), str(users.time_taken)]
+    # leaderboard_ordered = []
+
+    # for name, value in leader_dict.items():
+    #     score = value[0]
+    #     if len(leaderboard_ordered) == 0:
+    #         leaderboard_ordered.append(name)
+
+    #     for index, ordered_name in enumerate(leaderboard_ordered):
+    #         ordered_name_score = leader_dict[ordered_name][0]
+
+    #         if score > ordered_name_score:
+    #             leaderboard_ordered.insert(index, name)
+    #             break
+    #     if not name in leaderboard_ordered:
+    #         leaderboard_ordered.append(name)
+
+    # dict_ordered = OrderedDict((name,leader_dict[name]) for name in leaderboard_ordered)
+    # print(dict_ordered)
 
     sorted_dict = dict( sorted(leader_dict.items(),
                            key=lambda item: item[1],
                            reverse=True))
 
+    print(sorted_dict)
+    
     # for key, value in isPaid.items():
     #     print(key,value)
-    print(quiz.free_quiz)
+    #print(quiz.free_quiz)
     users_taken = []
     amount = quiz.quiz_price
     #print(payment)
@@ -68,7 +89,7 @@ def question(request, id):
 
     for userpaid in payment:
         user_paid.append(str(userpaid.user))
-    print(user_paid)
+    #print(user_paid)
 
     if quiz.free_quiz == True:
         if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
@@ -217,3 +238,4 @@ def contact(request):
         contact_form.save()
         return render(request, 'contact.html', context={'isSubmit':'True'})
     return render(request, 'contact.html')
+

@@ -174,12 +174,12 @@
                                 Points
                                 </th>
 
-                                <th scope="col" class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <!-- <th scope="col" class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Time Left
                                 </th>
                                 <th scope="col" class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Total Time
-                                </th>
+                                </th> -->
                                 <!-- <th class="px-8 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 
                                 </th> -->
@@ -189,7 +189,7 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 <tr>
                                 <td class="px-2 py-4 whitespace-nowrap text-center">
-
+                                    {{values.2}}
                                 </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -211,7 +211,7 @@
                                     {{ values.0 }}
                                 </span>
                                 </td>
-                                <td class="px-5 py-2">
+                                <!-- <td class="px-5 py-2"> -->
                                     <!-- <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trophy"
                                     role="img" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 576 512"><path fill="currentColor"
@@ -219,9 +219,9 @@
                                     class="bg-gray-500">
                                         </path>
                                     </svg> -->
-                                    {{ values.1}} Mins  
-                                </td>
-                                <td class="px-5 py-2">
+                                    <!-- {{ values.1}} Mins   -->
+                                <!-- </td> -->
+                                <!-- <td class="px-5 py-2"> -->
                                     <!-- <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trophy"
                                     role="img" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 576 512"><path fill="currentColor"
@@ -229,8 +229,8 @@
                                     class="bg-gray-500">
                                         </path>
                                     </svg> -->
-                                    {{ quiz.quiz_time }} Mins
-                                </td>
+                                    <!-- {{ quiz.quiz_time }} Mins -->
+                                <!-- </td> -->
                             </tr>
                             </tbody>
                             {% endfor %}
@@ -278,23 +278,23 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-5 text-sm md:text-lg mx-auto">
 
                 <label class="labl">
-                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option1" value="{{question.option1}}" required>
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option1" value="{{question.option1}}">
                     <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option1}}</h3></div>
                 </label>
                 <label class="labl">
-                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option2" value="{{question.option2}}" required>
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option2" value="{{question.option2}}">
                     <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option2}}</h3></div>
                 </label>
                 <label class="labl">
-                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option3" value="{{question.option3}}" required>
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option3" value="{{question.option3}}">
                     <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option3}}</h3></div>
                 </label>
                 <label class="labl">
-                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option4" value="{{question.option4}}" required>
+                    <input type="radio" name="{{question.id}}" class="appearance-none" id="option4" value="{{question.option4}}">
                     <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option4}}</h3></div>
                 </label>
                 <label id="question_list" style=" display: none; color: green;">{{quiz.id}}</label></td>
-                <label id="score_point" style=" display: none; color: green;">{{quiz.points}}</label></td>
+                <label id="score_point" style=" display: none; color: green;">{{question.points}}</label></td>
                 <label id="answer" style=" display: none; color: green;">{{question.correct_answer}}</label></td>
             </div>
         </div>
@@ -307,8 +307,8 @@
 
             {% if question_list.has_next %}
 
-                <a href="?page={{ question_list.next_page_number }}" id="next" class="p-4">
-                    <strong>Next</strong>
+                <a href="?page={{ question_list.next_page_number }}" id="next" class="className">
+                    <strong class="mx-auto p-3 block my-6 font-semibold" style="border-radius:10px">Next</strong>
                 </a>
                 
                 <!-- <button onclick=""></button> -->
@@ -338,6 +338,15 @@
 
                 if (--timer < 0) {
                     timer = duration;
+                    try {
+                        var button = document.getElementById('but1');
+                        button.click()
+                    } catch (error) {
+                        // alert(error);   
+                        $(function(){
+                        window.location.href = $('.className').attr('href');
+                        });
+                    }    
                 }
             }, 1000);
         }
@@ -359,7 +368,7 @@
             let question_list = document.querySelector('#question_list');
             let number = question_list.innerHTML;
             let t = document.querySelector("#time");
-            
+            let question_point = document.querySelector('#score_point')
             $("#next").on('click', function(){
                 for (let i = 0; i < e.length; i++) {
                     if (e[i].type=='radio' && e[i].checked) {
@@ -371,10 +380,11 @@
                     compare_element = user_answer.shift();
                     if (String(answer[i].innerHTML) == String(compare_element)) {
                         scores+=50;
-                        $.cookie('total', Number($.cookie('total')) + 50);
+                        $.cookie('total', Number($.cookie('total')) + Number(question_point.innerHTML));
                         // alert($.cookie('total'));
+                    } else{
+                        $.cookie('total', Number($.cookie('total')) - Number(question_point.innerHTML));
                     }
-                   
                 }
             });
             // alert(final_ans)
@@ -391,7 +401,9 @@
                     compare_element = user_answer.shift();
                     if (String(answer[i].innerHTML) == String(compare_element)) {
                         scores+=50;
-                        $.cookie('total', Number($.cookie('total')) + 50);
+                        $.cookie('total', Number($.cookie('total')) + Number(question_point.innerHTML));
+                    } else {
+                        $.cookie('total', Number($.cookie('total')) - Number(question_point.innerHTML));
                     }
                 }
                 $.ajax({

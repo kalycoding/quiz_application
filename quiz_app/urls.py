@@ -13,5 +13,5 @@ urlpatterns = [
     path('success/', success, name='success'),
     path('about/', about, name='about'),
     path('faqs/', faqs, name='faqs'),
-    path('contact/', contact, name='contact')
+    path('contact/', contact, name='contact'),
 ]
