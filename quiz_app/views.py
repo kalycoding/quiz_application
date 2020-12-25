@@ -59,6 +59,7 @@ def question(request, id):
     #     print(key,value)
     print(quiz.free_quiz)
     users_taken = []
+    amount = quiz.quiz_price
     #print(payment)
     for username in response:
         users_taken.append(str(username))
@@ -82,10 +83,9 @@ def question(request, id):
             else:
                 return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj}) ## return question pages if not
         else:                                   ##  User hasnt made the payment
-            amount = quiz.quiz_price
             if request.method == 'POST':
                 name = request.POST.get('name')
-                amount = quiz.quiz_price
+                #amount = quiz.quiz_price
 
                 client = razorpay.Client(
                     auth=("rzp_test_uCzWnrEymDyUU5","yyeXf6bd5iCt2zciiRhBAGB3"
@@ -101,8 +101,8 @@ def question(request, id):
                     new_payment = Payment(user=request.user, quiz=quiz, isPaid=True)
                     new_payment.save()
                     return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj})
-                return render(request, 'order.html', {'quiz':quiz,'question_list': page_obj, 'amount':amount})    
-            return render(request, 'order.html', {'quiz':quiz,'question_list': page_obj})
+                return render(request, 'order.html', {'quiz':quiz,'question_list': page_obj, 'amount': amount})    
+            return render(request, 'order.html', {'quiz':quiz,'question_list': page_obj, 'amount':amount})
     
 
 @login_required
