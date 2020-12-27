@@ -58,7 +58,7 @@ class Response(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     scores = models.IntegerField(default=0)
     isTaken = models.BooleanField(default=False)
-    time_taken = models.CharField(max_length=50)
+    time_taken = models.CharField(max_length=200)
     
 
     def __str__(self):

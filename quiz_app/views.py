@@ -47,13 +47,15 @@ def question(request, id):
     leaderboard = Response.objects.filter(quiz=quiz)
     payment = Payment.objects.filter(quiz=quiz)
     leader_dict = {}
-    print(response)
+    # time_taken = []
+    # for res in response:
+    #     print(res)
     for users in leaderboard:
         #print(users,users.scores)
         
         leader_dict[str(users)] = [str(users.scores), str(users.time_taken)]
     leaderboard_ordered = []
-
+    print(leader_dict)
     for name, value in leader_dict.items():
         score = value[0]
         if len(leaderboard_ordered) == 0:
@@ -69,7 +71,7 @@ def question(request, id):
             leaderboard_ordered.append(name)
 
     dict_ordered = OrderedDict((rank+1,(name,leader_dict[name])) for rank, name in enumerate(leaderboard_ordered))
-    print(dict_ordered)
+    #print(dict_ordered)
 
     # sorted_dict = dict( sorted(leader_dict.items(),
     #                        key=lambda item: item[1],
