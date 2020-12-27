@@ -189,7 +189,7 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 <tr>
                                 <td class="px-2 py-4 whitespace-nowrap text-center">
-                                    {{values.2}}
+                                    {{key}}
                                 </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -199,7 +199,7 @@
                                     </div>
                                     <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ key }}
+                                        {{ values.0 }}
                                     </div>
                                     </div>
                                 </div>
@@ -208,7 +208,7 @@
                                 <div class="text-sm text-gray-900">{{ quiz }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap ">
-                                    {{ values.0 }}
+                                    {{ values.1.0 }}
                                 </span>
                                 </td>
                                 <!-- <td class="px-5 py-2"> -->
@@ -262,9 +262,11 @@
 
             <div class="mx-auto p-6">
                 <p class="p-4"></p>
-                <h3 class="text-lg-center font-bold" style="font-size: large;">Quiz Timer</h3>
-                <span id="time" class="text-lg-center text-lg font-bold " style="color:  red;">{{ quiz.quiz_time }}</span>
-                <span id="backend" class="text-lg-center text-lg font-bold " style="display: none;">{{ quiz.quiz_time }}</span> Mins
+                <!-- <h3 class="text-lg-center font-bold" style="font-size: large;">Quiz Timer</h3> -->
+                <span id="time" class="text-lg-center text-lg font-bold " style="color:  red; display: none;"></span>
+                <span id="backend" class="text-lg-center text-lg font-bold " style="display: none;">{{ quiz.quiz_time }}</span> 
+                <div id="divCounter"></div>
+                <div id="quiz-time-left" class="text-lg-center text-lg font-bold" style="color: red;"> </div>
             </div>
 
 
@@ -294,6 +296,8 @@
                     <div class="px-6 py-2 bg-white transition duration-500 shadow hover:shadow-lg rounded-full"><h3>{{question.option4}}</h3></div>
                 </label>
                 <label id="question_list" style=" display: none; color: green;">{{quiz.id}}</label></td>
+                <label id="question_score_point" style=" display: none; color: green;">{{quiz.quiz_score_point}}</label></td>
+                <label id="question_negative_point" style=" display: none; color: green;">{{quiz.quiz_negative_point}}</label></td>
                 <label id="score_point" style=" display: none; color: green;">{{question.points}}</label></td>
                 <label id="answer" style=" display: none; color: green;">{{question.correct_answer}}</label></td>
             </div>
@@ -308,9 +312,10 @@
             {% if question_list.has_next %}
 
                 <a href="?page={{ question_list.next_page_number }}" id="next" class="className">
+                   
                     <strong class="mx-auto p-3 block my-6 font-semibold" style="border-radius:10px">Next</strong>
                 </a>
-                
+                <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold" style="display: none;">
                 <!-- <button onclick=""></button> -->
             {% else %}
                <input type="submit" id="but1" value="Submit" class="mx-auto p-3 block my-6 font-semibold">
@@ -324,39 +329,75 @@
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script src="{% static 'js/cookies.js' %}"></script>
     <script>
+            backend = document.querySelector('#backend');
+            if(localStorage.getItem("total_seconds")){
+                var total_seconds = localStorage.getItem("total_seconds");
+            } else {
+                var total_seconds = 60*Number(backend.innerHTML);
+            }
+            var minutes = parseInt(total_seconds/60);
+            var seconds = parseInt(total_seconds%60);
+            function countDownTimer(){
+                if(seconds < 10){
+                    seconds= "0"+ seconds ;
+                }if(minutes < 10){
+                    minutes= "0"+ minutes ;
+                }
+                
+                document.getElementById("quiz-time-left").innerHTML = "Time Left : " +minutes + " minutes " +seconds+ " seconds";
+                if(total_seconds <= 0){
 
-        function startTimer(duration, display) {
-            var timer = duration, minutes, seconds;
-            setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                display.textContent = minutes + ":" + seconds;
-
-                if (--timer < 0) {
-                    timer = duration;
-                    try {
+                    // alert('Time elapsed')
+                    
                         var button = document.getElementById('but1');
                         button.click()
-                    } catch (error) {
-                        // alert(error);   
-                        $(function(){
-                        window.location.href = $('.className').attr('href');
-                        });
-                    }    
+                    
+                    setTimeout("document.quiz.submit()",1);
+                } else {
+                    total_seconds = total_seconds -1 ;
+                    minutes = parseInt(total_seconds/60);
+                    seconds = parseInt(total_seconds%60);
+                    localStorage.setItem("total_seconds",total_seconds)
+                    setTimeout("countDownTimer()",1000);
                 }
-            }, 1000);
-        }
+            }
+            setTimeout("countDownTimer()",1000);
+            
+        // function startTimer(duration, display) {
+        //     var timer = duration, minutes, seconds;
+        //     setInterval(function () {
+        //         minutes = parseInt(timer / 60, 10);
+        //         seconds = parseInt(timer % 60, 10);
 
-        window.onload = function () {
-            backend = document.querySelector('#backend');
-            var Minutes = 60 * Number(backend.innerHTML),
-                display = document.querySelector('#time');
-            startTimer(Minutes, display);
-        };
+        //         minutes = minutes < 10 ? "0" + minutes : minutes;
+        //         seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        //         display.textContent = minutes + ":" + seconds;
+
+        //         if (--timer < 0) {
+        //             timer = duration;
+        //             try {
+        //                 var button = document.getElementById('but1');
+        //                 button.click()
+        //             } catch (error) {
+        //                 // alert(error);   
+        //                 $(function(){
+        //                 window.location.href = $('.className').attr('href');
+        //                 });
+        //             }    
+        //         }
+                
+        //     }, 1000);
+            
+        // }
+
+        // window.onload = function () {
+        //     backend = document.querySelector('#backend');
+        //     var Minutes = 60 * Number(backend.innerHTML),
+        //         display = document.querySelector('#time');
+        //     startTimer(Minutes, display);
+            
+        // };
         let final_ans = 0;
 
         $(document).ready(function() {
@@ -368,7 +409,9 @@
             let question_list = document.querySelector('#question_list');
             let number = question_list.innerHTML;
             let t = document.querySelector("#time");
-            let question_point = document.querySelector('#score_point')
+            // let question_point = document.querySelector('#score_point')
+            let question_point = document.querySelector('#question_score_point')
+            let question_negative_point = document.querySelector('#question_negative_point')
             $("#next").on('click', function(){
                 for (let i = 0; i < e.length; i++) {
                     if (e[i].type=='radio' && e[i].checked) {
@@ -383,12 +426,14 @@
                         $.cookie('total', Number($.cookie('total')) + Number(question_point.innerHTML));
                         // alert($.cookie('total'));
                     } else{
-                        $.cookie('total', Number($.cookie('total')) - Number(question_point.innerHTML));
+                        $.cookie('total', Number($.cookie('total')) - Number(question_negative_point.innerHTML));
                     }
                 }
             });
             // alert(final_ans)
             $('#but1').on('click', function(){
+                let timing = document.getElementById("quiz-time-left").innerHTML;
+                timing = timing.substring(13);
                 // alert(t.innerHTML);
                 let j = 0;
                 for (let i = 0; i < e.length; i++) {
@@ -402,8 +447,9 @@
                     if (String(answer[i].innerHTML) == String(compare_element)) {
                         scores+=50;
                         $.cookie('total', Number($.cookie('total')) + Number(question_point.innerHTML));
+                        
                     } else {
-                        $.cookie('total', Number($.cookie('total')) - Number(question_point.innerHTML));
+                        $.cookie('total', Number($.cookie('total')) - Number(question_negative_point.innerHTML));
                     }
                 }
                 $.ajax({
@@ -411,14 +457,19 @@
                     url: `/answer/${number}/`,
                     data: {
                         my_scores: $.cookie('total'),
-                        time_taken: String(t.innerHTML),
+                        time_taken: 'kalifa',
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                     },
                     success: function(resp){
                         $.cookie('total', 0);
+                        localStorage.clear()
                     },
+                    error: function() {
+                        localStorage.clear()
+                    }
                 })
                 $.cookie('total', 0);
+                localStorage.clear()
             });
         });
     </script>

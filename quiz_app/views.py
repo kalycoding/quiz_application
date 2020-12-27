@@ -47,34 +47,35 @@ def question(request, id):
     leaderboard = Response.objects.filter(quiz=quiz)
     payment = Payment.objects.filter(quiz=quiz)
     leader_dict = {}
+    print(response)
     for users in leaderboard:
         #print(users,users.scores)
         
         leader_dict[str(users)] = [str(users.scores), str(users.time_taken)]
-    # leaderboard_ordered = []
+    leaderboard_ordered = []
 
-    # for name, value in leader_dict.items():
-    #     score = value[0]
-    #     if len(leaderboard_ordered) == 0:
-    #         leaderboard_ordered.append(name)
+    for name, value in leader_dict.items():
+        score = value[0]
+        if len(leaderboard_ordered) == 0:
+            leaderboard_ordered.append(name)
 
-    #     for index, ordered_name in enumerate(leaderboard_ordered):
-    #         ordered_name_score = leader_dict[ordered_name][0]
+        for index, ordered_name in enumerate(leaderboard_ordered):
+            ordered_name_score = leader_dict[ordered_name][0]
 
-    #         if score > ordered_name_score:
-    #             leaderboard_ordered.insert(index, name)
-    #             break
-    #     if not name in leaderboard_ordered:
-    #         leaderboard_ordered.append(name)
+            if int(score) > int(ordered_name_score):
+                leaderboard_ordered.insert(index, name)
+                break
+        if not name in leaderboard_ordered:
+            leaderboard_ordered.append(name)
 
-    # dict_ordered = OrderedDict((name,leader_dict[name]) for name in leaderboard_ordered)
-    # print(dict_ordered)
+    dict_ordered = OrderedDict((rank+1,(name,leader_dict[name])) for rank, name in enumerate(leaderboard_ordered))
+    print(dict_ordered)
 
-    sorted_dict = dict( sorted(leader_dict.items(),
-                           key=lambda item: item[1],
-                           reverse=True))
+    # sorted_dict = dict( sorted(leader_dict.items(),
+    #                        key=lambda item: item[1],
+    #                        reverse=True))
 
-    print(sorted_dict)
+    # print(sorted_dict)
     
     # for key, value in isPaid.items():
     #     print(key,value)
@@ -93,14 +94,14 @@ def question(request, id):
 
     if quiz.free_quiz == True:
         if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
-            return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
+            return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':dict_ordered}) ## return leader board if user take
         else:
             return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj}) ## return question pages if not
 
     else:
         if str(request.user) in user_paid:      ## Checks weda user pay for the quiz
             if str(request.user) in users_taken:    ## Checks weda user has taken the quiz
-                return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':sorted_dict}) ## return leader board if user take
+                return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj, 'isTaken': response, 'leader':dict_ordered}) ## return leader board if user take
             else:
                 return render(request, 'question.html', {'quiz':quiz,'question_list': page_obj}) ## return question pages if not
         else:                                   ##  User hasnt made the payment

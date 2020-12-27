@@ -17,6 +17,8 @@ class Quiz(models.Model):
     quiz_time = models.IntegerField(default=60)
     free_quiz = models.BooleanField(default=False)
     winning_amoun = models.IntegerField(default=0)
+    quiz_score_point = models.FloatField(default=50)
+    quiz_negative_point = models.FloatField(default=0)
 
     def __str__(self):
         return self.quiz_name
@@ -30,7 +32,7 @@ class Question(models.Model):
     option4 = models.CharField(max_length=100)
     correct_answer = models.CharField(max_length=100)
     isTaken = models.BooleanField(default=False)
-    points = models.IntegerField(default=30)
+    # points = models.IntegerField(default=30)
 
     def __str__(self):
         return self.question
