@@ -64,7 +64,7 @@ def question(request, id):
         for index, ordered_name in enumerate(leaderboard_ordered):
             ordered_name_score = leader_dict[ordered_name][0]
 
-            if int(score) > int(ordered_name_score):
+            if float(score) > float(ordered_name_score):
                 leaderboard_ordered.insert(index, name)
                 break
         if not name in leaderboard_ordered:
@@ -208,7 +208,7 @@ def answer(request,id):
         # scores = request.POST.get('individual_scores')
         time_taken = request.POST.get('time_taken')
         # print(time_taken)
-        # print(scores)
+        print(scores)
         response = Response(user=request.user, quiz=quiz, scores=scores, isTaken=True, time_taken=time_taken)
         response.save()
         

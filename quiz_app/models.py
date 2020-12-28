@@ -56,7 +56,7 @@ class UserProfileInfo(models.Model):
 class Response(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    scores = models.IntegerField(default=0)
+    scores = models.FloatField(default=0)
     isTaken = models.BooleanField(default=False)
     time_taken = models.CharField(max_length=200)
     
