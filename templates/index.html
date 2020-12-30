@@ -14,6 +14,7 @@
     <body>
         
         {% block body_block %}
+            
             <header class="w-full h-90 block">
               <!-- <div class="w-full h-full py-20 bg-green-400">
                 <img src="https://image.shutterstock.com/image-photo/programmatic-advertising-concept-youtube-online-600w-1675180834.jpg" alt="" class="block h-full w-full mx-auto">
@@ -23,6 +24,10 @@
                 <img src="https://images-platform.99static.com/CFJNEiym-Cgo9psxSOIkLQanIZs=/0x0:2000x2000/500x500/top/smart/99designs-contests-attachments/87/87694/attachment_87694953" alt="images-platform" class="block h-full w-full mx-auto" style="width:100%;">
             </div>
           </header>
+          <div class="w-full px-6 py-6 text-center">
+                    <input type="text" class="focus:outline-none w-7/12 lg:w-4/12 rounded-l-full px-6 py-2 bg-green-50 shadow-inner m-0">
+                    <button class="focus:outline-none px-4 py-2 bg-green-400 text-white -m-2 rounded-r-full"><i class="fa fa-search"></i>Search</button>
+          </div>
             <div class="grid md:grid-cols-2 gap-4 lg:grid-cols-3 grid-cols-1 p-10 text-center font-sans">
             {% if quiz %}
             
