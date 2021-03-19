@@ -9,6 +9,7 @@ from django.views import generic
 from django.core.paginator import Paginator
 from django.utils import timezone
 from collections import OrderedDict
+from django.db.models import Q
 import json
 import operator
 import razorpay
@@ -34,7 +35,20 @@ class QuizList(generic.ListView):
     context_object_name = 'quiz'
     template_name='index.html'
     
+    
+    
+class QuizListSearch(generic.ListView):
+    model = Quiz
+    context_object_name = 'quiz'
+    template_name='index_search.html'
+    
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+        return Quiz.objects.filter(
+            Q(quiz_name__icontains=query)
+        )
 
+    
 @login_required(login_url='/login/')
 def question(request, id):
     quiz = Quiz.objects.get(pk=id)

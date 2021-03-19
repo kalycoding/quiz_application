@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import index,register, user_login, user_logout, QuizList, question, google_login, leaderBoard, answer, create_order, success, about, faqs, contact
+from .views import index,register, user_login, user_logout, QuizList, question, google_login, leaderBoard, answer, create_order, success, about, faqs, contact, QuizListSearch
 urlpatterns = [
-    path('',index, name='landing_page'),
+    path('',QuizList.as_view(), name='landing_page'),
+    path('search/', QuizListSearch.as_view(), name='quiz_search'),
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('register/', register, name='signuppage'),
